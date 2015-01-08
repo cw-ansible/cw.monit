@@ -22,6 +22,7 @@
     - dest: /etc/monitrc.d
     - dest: /etc/monitrc.d/services
     - dest: /etc/monitrc.d/scripts
+    - dest: /etc/monitrc.d/templates
     - dest: '{{ monit_var_dir }}'
 
 - name: Install monit upstart script
@@ -40,3 +41,18 @@
   with_items:
     - src: etc/monitrc.d/passwd
     - src: etc/monitrc
+
+- name: install monit base checks
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest | default("/" + item.src) }}'
+    mode: '{{ item.mode | default("0600") }}'
+    owner: '{{ item.owner | default("root") }}'
+    group: '{{ item.group | default("root") }}'
+  notify: monit restart
+  with_items:
+    - src: etc/monitrc.d/templates/rootbin
+    - src: etc/monitrc.d/templates/rootrc
+    - src: etc/monitrc.d/templates/rootstrict
+    - src: etc/monitrc.d/services/ssh.cfg
+    - src: etc/monitrc.d/services/cron.cfg

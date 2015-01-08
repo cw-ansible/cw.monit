@@ -102,4 +102,4 @@ set alert {{ alert.email }}
 {% endif %}
 
 
-include /etc/monitrc/services/*.cfg
+include /etc/monitrc.d/services/*.cfg

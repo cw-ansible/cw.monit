@@ -1,0 +1,3 @@
+ if failed permission 755 then alert
+ if failed uid root       then alert
+ if failed gid root       then alert
