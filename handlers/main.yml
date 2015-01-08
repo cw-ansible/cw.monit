@@ -1,0 +1,9 @@
+---
+
+- name: monit restart
+  service: name=monit state=restarted
+
+- name: monit reload
+  command:
+    service monit reload
+  
