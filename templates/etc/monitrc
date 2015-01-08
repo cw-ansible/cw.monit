@@ -43,6 +43,11 @@ set httpd port {{ monit_config.http.port | default(2812) }}
 {%   endif %}
 {% endif %}
 
+{% if monit_config.mmonit is defined %}
+# MMonit configuration
+set mmonit {{ monit_config.mmonit }}
+{% endif %}
+
 {% if monit_config.mail is defined %}
 # Mail configuration
 set mailserver

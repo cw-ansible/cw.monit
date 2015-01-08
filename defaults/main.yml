@@ -55,7 +55,7 @@ monit_credentials: []
 #    from: sender email
 #    subject: Mail subject
 #    message: Mail body
-
+#  mmonit: url for mmonit interface: http://user:pass@host:8080/collector
 
 monit_config:
   daemon: 20
