@@ -8,6 +8,15 @@ monit_version: '5.11'
 # You shouldn't change this
 monit_var_dir: /var/lib/monit
 
+
+## list of monit credentials
+# Each item is a user:password entry
+#
+# To compute the password, run:
+#   htpasswd -nbm john password
+monit_credentials: []
+
+
 ## Monit configuration
 # Hash representing various monit configuration items.
 # See http://mmonit.com/monit/documentation/monit.html for full detail.

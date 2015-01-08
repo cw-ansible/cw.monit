@@ -28,11 +28,15 @@
   copy:
     src: etc/init/monit.conf
     dest: /etc/init/monit.conf
-
-- name: Install monit configuration
+    
+- name: install default monit configuration
   template:
-    src: etc/monitrc
-    dest: /etc/monitrc
-    mode: '0600'
-    owner: 'root'
-    group: 'root'
+    src: '{{ item.src }}'
+    dest: '{{ item.dest | default("/" + item.src) }}'
+    mode: '{{ item.mode | default("0600") }}'
+    owner: '{{ item.owner | default("root") }}'
+    group: '{{ item.group | default("root") }}'
+  notify: monit restart
+  with_items:
+    - src: etc/monitrc.d/passwd
+    - src: etc/monitrc
