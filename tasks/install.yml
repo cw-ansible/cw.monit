@@ -1,0 +1,24 @@
+---
+
+
+- name: download monit file
+  get_url:
+    url: '{{ monit_download_url }}'
+    dest: /tmp
+    
+- name: Unarchive monit
+  unarchive:
+    src: '/tmp/{{ monit_archive_file }}'
+    dest: /tmp
+    copy: no
+
+- name: copy monit files to system
+  command:
+    rsync -ai '{{ item.src }}' '{{ item.dest }}'
+  register: rsync_config
+  changed_when: "'>f' in rsync_config.stdout"
+  with_items:
+    - src: '/tmp/monit-{{ monit_version }}/man/man1/monit.1'
+      dest: '/usr/share/man/man1/monit.1'
+    - src: '/tmp/monit-{{ monit_version }}/bin/monit'
+      dest: '/usr/sbin/monit'

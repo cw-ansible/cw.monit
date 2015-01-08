@@ -1,0 +1,6 @@
+---
+
+## Name of the downloaded monit file
+monit_archive_file: monit-{{ monit_version }}-linux-x64.tar.gz
+## URL from where to download the monit binaries
+monit_download_url: http://mmonit.com/monit/dist/binary/{{ monit_version }}/{{ monit_archive_file }}

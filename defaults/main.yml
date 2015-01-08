@@ -1,0 +1,88 @@
+---
+
+## Monit version to install
+# This should be quoted to be interpreted as a string.
+monit_version: '5.11'
+
+## Where monit store its informations such as id state and events
+# You shouldn't change this
+monit_var_dir: /var/lib/monit
+
+## Monit configuration
+# Hash representing various monit configuration items.
+# See http://mmonit.com/monit/documentation/monit.html for full detail.
+#
+#  daemon:    polling intervall in seconds (default 20).
+#  init:      from transforming itself into a daemon process (defaut yes).
+#  logfile:   where to log status and error messages (default syslog).
+#  idfile:    location of monit id file (default /var/lib/monit/id)
+#  statefile: location of monit id file (default /var/lib/monit/state)
+#  eventqueue:
+#    basedir: base directory where events are stored (default /var/lib/monit/events)
+#    slots:   queue size (default 100)
+#  http:
+#    port:    HTTPd listening port (default 2812)
+#    address: HTTPd listening address (default localhost)
+#      # ssl: enable TLS for Monit's web interface (default false)
+#      # clientpemfile: Path to client certificate based authentication
+#      # allowselfcertification: 
+#      # signature: hide Monit version from the HTTP response header (default false)
+#  mail:
+#    servers: List of mail servers to use
+#      - host: mail server host
+#        port: mail server port
+#        username: for auth
+#        password: for auth
+#        ssl:      ssl scheme to use
+#        certmd5:
+#    timeout:  SMTP timeout
+#    hostname: hostname to use in EHLO
+#  alerts:    (List of alerts to configure)
+#    - email: recipient
+#      events: Limit alters on alerts on events
+#      not_events: blacklist events from alerts
+#      reminder: Ad reminder every X cycles
+#  mail_format: (configure the mail format)
+#    from: sender email
+#    subject: Mail subject
+#    message: Mail body
+
+
+monit_config:
+  daemon: 20
+  init: yes
+  logfile: syslog
+  idfile: '{{ monit_var_dir + "/id" }}'
+  statefile: '{{ monit_var_dir + "/state" }}'
+  eventqueue:
+    basedir: '{{ monit_var_dir + "/events" }}'
+    slots: 100
+  http:
+    port: 2812
+    address: localhost
+      # ssl: no
+      # clientpemfile:
+      # allowselfcertification: no
+      # signature: no
+  mail:
+    servers:
+      - host: 127.0.01
+        port: 25
+  alerts:
+    - email: john.doe@example.com
+      reminder: 10
+  mail_format:
+    from: monit@example.com
+    subject: '[$HOST] $SERVICE $EVENT'
+    message: |
+      At $DATE:
+
+      - Host:        $HOST
+      - Service:     $SERVICE
+      - Event:       $EVENT
+      - Action:      $ACTION
+      - Description: $DESCRIPTION
+
+      Monit:   http://{{ansible_fqdn}}:2812/
+      Service: http://{{ansible_fqdn}}:2812/$SERVICE
+

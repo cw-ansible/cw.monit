@@ -1,0 +1,39 @@
+---
+
+- name: check monit version
+  shell: |
+    monit -V | sed -n 's/This is Monit version //p'
+  register: monit_sys_version
+  ignore_errors: yes
+  changed_when: false
+  
+- include: install.yml
+  when:
+    monit_sys_version.stdout != monit_version
+
+- name: Create required directories
+  file:
+    dest: '{{ item.dest }}'
+    mode: '{{ item.mode | default("0700") }}'
+    owner: '{{ item.owner | default("root") }}'
+    group: '{{ item.group | default("root") }}'
+    state: '{{ item.state | default("directory") }}'
+  with_items:
+    - dest: /etc/monitrc.d
+    - dest: /etc/monitrc.d/services
+    - dest: /etc/monitrc.d/scripts
+    - dest: '{{ monit_var_dir }}'
+
+- name: Install monit upstart script
+  copy:
+    src: etc/init/monit.conf
+    dest: /etc/init/monit.conf
+
+- name: Install monit configuration
+  template:
+    src: etc/monitrc
+    dest: /etc/monitrc
+    mode: '0600'
+    owner: 'root'
+    group: 'root'
+    validate: 'monit -tc "%s"'

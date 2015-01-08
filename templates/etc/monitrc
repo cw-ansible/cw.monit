@@ -1,0 +1,100 @@
+# Monit configuration file
+# {{ ansible_managed }}
+
+# Global daemon configuration
+set daemon {{ monit_config.daemon | default(20) }}
+{% if monit_config.init is defined and monit_config.init %}
+set init
+{% endif %}
+
+# Log and status
+set logfile {{ monit_config.logfile | default("syslog") }}
+set idfile {{ monit_config.idfile | default("/var/lib/monit/id") }}
+set statefile {{ monit_config.statefile | default("/var/lib/monit/state") }}
+{% if monit_config.eventqueue is defined %}
+set eventqueue
+    basedir {{ monit_config.eventqueue.basedir | default("/var/lib/monit/events") }}
+    slots {{ monit_config.eventqueue.slots | default(100) }}
+{% endif %}
+
+{% if monit_config.http is defined %}
+# HTTPd configuration
+set httpd port {{ monit_config.http.port | default(2812) }}
+    address {{ monit_config.http.address | default("localhost") }}
+{%   if monit_config.http.ssl is defined and monit_config.http.ssl %}
+    ssl enable
+{%     if monit_config.http.clientpemfile is defined %}
+    clientpemfile {{ monit_config.http.clientpemfile }}
+{%     endif %}
+{%     if monit_config.http.allowselfcertification is defined and monit_config.http.allowselfcertification %}
+    allowselfcertification
+{%     endif %}
+{%   endif %}
+{%   if monit_config.http.signature is defined and monit_config.http.signature %}
+    signature enable
+{%   else %}
+    signature disable
+{%   endif %}
+    allow 127.0.0.1
+{%   if monit_config.http.allow is defined %}
+{%     for allow in monit_config.http.allow %}
+    allow {{ allow }}
+{%     endfor %}
+{%   endif %}
+{% endif %}
+
+{% if monit_config.mail is defined %}
+# Mail configuration
+set mailserver
+{%   if monit_config.mail.servers is defined %}
+{%     for server in monit_config.mail.servers %}
+    {{ server.host | default(localhost) }} port {{ server.port | default(25) }}
+{%       if server.username is defined and server.password is defined %}
+    username {{ server.username }} password {{ server.password }}
+{%       endif %}
+{%       if server.ssl is defined and server.ssl %}
+    using {{ server.ssl }}
+{%       endif %}
+{%       if server.certmd5 is defined and server.certmd5 %}
+    certmd5 {{ server.certmd5 }}
+{%       endif %},
+{%     endfor %}
+{%   else %}
+    localhost port 25
+{%   endif %}
+{%   if monit_config.mail.timeout is defined %}
+    with timeout {{ monit_config.mail.timeout }} seconds
+{%   endif %}
+{%   if monit_config.mail.hostname is defined %}
+    using hostname {{ monit_config.mail.hostname }}
+{%   endif %}
+{% endif %}
+
+{% if monit_config.mail_format is defined %}
+# Mail format configuration
+set mail-format {
+{%   for header in [ 'from', 'reply-to', 'subject', 'message' ] %}
+{%     if monit_config.mail_format[header] is defined %}
+    {{header}}: {{ monit_config.mail_format[header] }}
+{%     endif %}
+{%   endfor %}
+}
+{% endif %}
+
+{% if monit_config.alerts is defined %}
+# Alerts configuration
+{%   for alert in monit_config.alerts %}
+set alert {{ alert.email }}
+{%     if alert.events is defined %}
+    { {{ alert.events | join(", ") }} }
+{%     elif alert.not_events is defined %}
+    not { {{ alert.not_events | join(", ") }} }
+{%     endif %}
+{%     if alert.reminder is defined %}
+    reminder {{ alert.reminder }}
+{%     endif %}
+{%   endfor %}
+{% endif %}
+
+
+include /etc/monitrc/services/*.cfg
