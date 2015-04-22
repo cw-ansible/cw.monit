@@ -2,7 +2,11 @@
 
 ## Monit version to install
 # This should be quoted to be interpreted as a string.
-monit_version: '5.11'
+#
+# Since tildeslash does not provide all its build history you may need to
+# check at http://mmonit.com/monit/dist/binary/ for the correct version
+# number.
+monit_version: '5.12.2'
 
 ## Where monit store its informations such as id state and events
 # You shouldn't change this
