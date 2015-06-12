@@ -6,7 +6,7 @@ lang: american
 -->
 
 [![Build Status](https://travis-ci.org/cw-ansible/cw.monit.svg?branch=master)](https://travis-ci.org/cw-ansible/cw.monit)
-[![Tweet this](http://img.shields.io/badge/%20-Tweet-00aced.svg)](https://twitter.com/intent/tweet?tw_p=tweetbutton&via=renard_0&url=https%3A%2F%2Fgithub.com%2Fcw-ansible%2Fcw.monit&text=Install%20and%20configure%20%23Monit%20using%20%23Ansible.)
+[![Tweet this](http://img.shields.io/badge/Tweet-it00aced.svg)](https://twitter.com/intent/tweet?tw_p=tweetbutton&via=renard_0&url=https%3A%2F%2Fgithub.com%2Fcw-ansible%2Fcw.monit&text=Install%20and%20configure%20%23Monit%20using%20%23Ansible.)
 [![Follow me on twitter](http://img.shields.io/badge/Twitter-Follow-00aced.svg)](https://twitter.com/intent/follow?region=follow_link&screen_name=renard_0&tw_p=followbutton)
 
 
